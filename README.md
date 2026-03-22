@@ -7,12 +7,12 @@ Models </h1>
 <sup>1</sup> University at Buffalo, SUNY &nbsp;&nbsp; <sup>2</sup> NEC Laboratories America, Inc., USA &nbsp;&nbsp; <sup>3</sup> Rutgers University
 
 
-[![GitHub Project](https://img.shields.io/badge/GitHub-Project-blue?logo=github)](https://github.com/Jingchensun/clap-s)
-[![arXiv](https://img.shields.io/badge/arXiv-2501.09877-b31b1b.svg)](https://arxiv.org/abs/2501.09877) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Project](https://img.shields.io/badge/GitHub-Project-blue?logo=github)](https://github.com/Jingchensun/beta-kd)
+[![arXiv](https://img.shields.io/badge/arXiv-2501.09877-b31b1b.svg)](https://github.com/Jingchensun/beta-kd) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
 
 ## Introduction
-We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://arxiv.org/abs/2501.09877)]
+We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://github.com/Jingchensun/beta-kd)]
 <div align="center">
 <img src="assets/main.png" width="70%">
 </div>
@@ -21,17 +21,17 @@ We propose a novel uncertainty-aware knowledge distillation method, which can im
 ## 📸 Release
 
 
-* **`Mar. 24th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://huggingface.co/mtgv/) early.
-* **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **5 hours** ⚡️ !
-* **`Mar. 18th, 2026`:** 🔥🔥🔥 We release **Beta-KD: A Fast, Strong and Open Vision Language Assistant for Mobile Devices** on arxiv. Refer to **[our paper](https://arxiv.org/abs/2312.16886)** for more details !
+* **`Mar. 24th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://github.com/Jingchensun/beta-kd) early.
+* **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **20 hours** ⚡️ !
+* **`Mar. 18th, 2026`:** 🔥🔥🔥 We release **Beta-KD: A Fast, Strong and Open Vision Language Assistant for Mobile Devices** on arxiv. Refer to **[our paper](https://github.com/Jingchensun/beta-kd)** for more details !
 
 ## 🦙 Model Zoo
 
 #### Model Zoo
 | Model | LLM | GQA | SQA<sup>I</sup> | VQA<sup>T</sup> | POPE | MME<sup>P</sup>  | MMB<sup>dev</sup> | Avg. |
 |-------|-------|---|-------|-------|-------|-------|-------|-------|
-| <div style="width: 93pt"> [Beta-KD-1.7B](https://huggingface.co/mtgv/Beta-KD-1.7B)    | <div style="width: 91pt"> [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | 56.1   | 57.3  | 41.5  | 84.5 | 1196.2 | 53.2    | 58.7 |
-| [Beta-KD-MobileVLM 1.7B](https://huggingface.co/mtgv/Beta-KD_V2-1.7B) | [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | **59.3**   | **66.7**  | **52.1**  | **84.3** | **1302.8** | **57.7**    | **64.2** |
+| <div style="width: 93pt"> [Beta-KD-1.7B](https://github.com/Jingchensun/beta-kd)    | <div style="width: 91pt"> [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | 56.1   | 57.3  | 41.5  | 84.5 | 1196.2 | 53.2    | 58.7 |
+| [Beta-KD-MobileVLM 1.7B](https://github.com/Jingchensun/beta-kd) | [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | **59.3**   | **66.7**  | **52.1**  | **84.3** | **1302.8** | **57.7**    | **64.2** |
 
 
 
@@ -258,8 +258,8 @@ All available argument options:
 
 
 ## 🤝 Acknowledgments
-
-- [Beta-KD](https://github.com/Meituan-AutoML/Beta-KD): the codebase we built upon. Thanks for their wonderful work! 👏
+- [MobileVLM](https://github.com/Meituan-AutoML/MobileVLM): the codebase we built upon. Thanks for their wonderful work! 👏
+- [Align-KD](https://github.com/fqhank/Align-KD): the baseline work we refer to!
 - [TAID](https://github.com/SakanaAI/TAID): some kl loss implementation are borrow from this code base!
 
 
