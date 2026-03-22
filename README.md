@@ -23,7 +23,8 @@ We propose a novel uncertainty-aware knowledge distillation method, which can im
 
 * **`Mar. 24th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://github.com/Jingchensun/beta-kd) early.
 * **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **20 hours** ⚡️ !
-* **`Mar. 18th, 2026`:** 🔥🔥🔥 We release **Beta-KD: A Fast, Strong and Open Vision Language Assistant for Mobile Devices** on arxiv. Refer to **[our paper](https://github.com/Jingchensun/beta-kd)** for more details !
+* **`Mar. 18th, 2026`:** 🔥🔥🔥 We release **Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language
+Models** on arxiv. Refer to **[our paper](https://github.com/Jingchensun/beta-kd)** for more details !
 
 ## 🦙 Model Zoo
 
