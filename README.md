@@ -8,11 +8,11 @@ Models </h1>
 
 
 [![GitHub Project](https://img.shields.io/badge/GitHub-Project-blue?logo=github)](https://github.com/Jingchensun/beta-kd)
-[![arXiv](https://img.shields.io/badge/arXiv-2501.09877-b31b1b.svg)](https://github.com/Jingchensun/beta-kd) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2603.21426-b31b1b.svg)](https://arxiv.org/abs/2603.21426) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
 
 ## Introduction
-We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://github.com/Jingchensun/beta-kd)]
+We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://arxiv.org/abs/2603.21426)]
 <div align="center">
 <img src="assets/main.png" width="70%">
 </div>
@@ -21,18 +21,18 @@ We propose a novel uncertainty-aware knowledge distillation method, which can im
 ## 📸 Release
 
 
-* **`Mar. 24th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://github.com/Jingchensun/beta-kd) early.
-* **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **20 hours** ⚡️ !
-* **`Mar. 18th, 2026`:** 🔥🔥🔥 We release **Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language
-Models** on arxiv. Refer to **[our paper](https://github.com/Jingchensun/beta-kd)** for more details !
+* **`Apri. 27th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://huggingface.co/mtgv/) early.
+* **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **5 hours** ⚡️ !
+* **`Mar. 21th, 2026`:** 🔥🔥🔥 We release **Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models** on arxiv. Refer to **[our paper](https://arxiv.org/abs/2603.21426)** for more details !
 
 ## 🦙 Model Zoo
 
 #### Model Zoo
-| Model | LLM | GQA | SQA<sup>I</sup> | VQA<sup>T</sup> | POPE | MME<sup>P</sup>  | MMB<sup>dev</sup> | Avg. |
-|-------|-------|---|-------|-------|-------|-------|-------|-------|
-| <div style="width: 93pt"> [Beta-KD-1.7B](https://github.com/Jingchensun/beta-kd)    | <div style="width: 91pt"> [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | 56.1   | 57.3  | 41.5  | 84.5 | 1196.2 | 53.2    | 58.7 |
-| [Beta-KD-MobileVLM 1.7B](https://github.com/Jingchensun/beta-kd) | [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | **59.3**   | **66.7**  | **52.1**  | **84.3** | **1302.8** | **57.7**    | **64.2** |
+| Model | LLM | MME<sup>P</sup> | MME<sup>A</sup> | GQA | VQA<sup>T</sup> | POPE | MMB<sup>dev</sup> | SQA<sup>I</sup> | Avg. |
+|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+| <div style="width: 93pt"> Cosine-KD | <div style="width: 91pt"> [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | 1308.4 | 65.4 | 59.9 | 52.2 | 84.6 | 57.1 | 61.3 | 63.4 |
+| [w/ Beta-KD (Task)](https://huggingface.co/jsun39/Cosine-Beta-KD-Task) | [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | **1352.0** | **67.6** | 60.8 | 53.9 | 85.4 | 59.1 | 61.2 | 64.7 |
+| [w/ Beta-KD (Instance)](https://huggingface.co/jsun39/Cosine-Beta-KD-Instance) | [MobileLLaMA 1.4B](https://huggingface.co/mtgv/MobileLLaMA-1.4B-Chat) | 1350.3 | 67.5 | **61.2** | **54.2** | **86.0** | **60.2** | **62.9** | **65.3** |
 
 
 
@@ -259,8 +259,8 @@ All available argument options:
 
 
 ## 🤝 Acknowledgments
-- [MobileVLM](https://github.com/Meituan-AutoML/MobileVLM): the codebase we built upon. Thanks for their wonderful work! 👏
-- [Align-KD](https://github.com/fqhank/Align-KD): the baseline work we refer to!
+
+- [Beta-KD](https://github.com/Meituan-AutoML/Beta-KD): the codebase we built upon. Thanks for their wonderful work! 👏
 - [TAID](https://github.com/SakanaAI/TAID): some kl loss implementation are borrow from this code base!
 
 
