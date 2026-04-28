@@ -21,7 +21,7 @@ We propose a novel uncertainty-aware knowledge distillation method, which can im
 ## 📸 Release
 
 
-* **`Apri. 27th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://huggingface.co/mtgv/) early.
+* **`Apri. 27th, 2026`**: Our Beta-KD weights are uploaded on the HuggingFace website. We also provide inference examples so that anyone can enjoy [them](https://huggingface.co/jsun39/Cosine-Beta-KD-Instance) early.
 * **`Mar. 22th, 2026`**: The training and evaluation codes of Beta-KD are available now! Follow these  step-by-step instructions below to easily train your own Beta-KD in **5 hours** ⚡️ !
 * **`Mar. 21th, 2026`:** 🔥🔥🔥 We release **Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models** on arxiv. Refer to **[our paper](https://arxiv.org/abs/2603.21426)** for more details !
 
@@ -185,7 +185,7 @@ Clone this repository and install conda environment
 
 Evaluate a Hugging Face model on a single dataset (e.g. ScienceQA):
 ```shell
-bash scripts/benchmark.sh jsun39/AlignKD-Pretrain-1246k eval-results "sqa"
+bash scripts/benchmark.sh jsun39/Cosine-Beta-KD-Instance eval-results "sqa"
 ```
 
 Evaluate a local finetuned model on a single dataset (e.g. ScienceQA):
@@ -195,7 +195,7 @@ bash scripts/benchmark.sh outputs-finetune/finetune/checkpoint-18000 eval-result
 
 Evaluate a Hugging Face model on all 6 benchmark datasets:
 ```shell
-bash scripts/benchmark.sh jsun39/AlignKD-Pretrain-1246k eval-results
+bash scripts/benchmark.sh jsun39/Cosine-Beta-KD-Instance eval-results
 ```
 
 Evaluate a local finetuned model on all 6 benchmark datasets:
@@ -239,14 +239,14 @@ bash 2_finetune.sh 1 align-kd equal
 
 **Beta-KD with task-level uncertainty weighting:**
 ```shell
-bash 1_pretrain.sh 1 align-kd task
-bash 2_finetune.sh 1 align-kd task
+bash 1_pretrain.sh 1 cosine-probs task
+bash 2_finetune.sh 1 cosine-probs task
 ```
 
 **Beta-KD with instance-conditional weighting:**
 ```shell
-bash 1_pretrain.sh 1 align-kd instance
-bash 2_finetune.sh 1 align-kd instance
+bash 1_pretrain.sh 1 cosine-probs instance
+bash 2_finetune.sh 1 cosine-probs instance
 ```
 
 All available argument options:
