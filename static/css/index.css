@@ -761,6 +761,13 @@ a:focus {
 .publication-venue {
   margin-top: 0;
   margin-bottom: 1rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: var(--primary-color);
+  box-shadow: var(--shadow-md);
 }
 
 .paper-figure {
