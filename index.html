@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models">
+  <meta name="description" content="Beta-KD (CVPR 2026) casts teacher supervision as a Gibbs prior over student activations, yielding a closed-form, uncertainty-aware weighting that adaptively balances learning from data and from the teacher in multimodal LLM distillation.">
+  <meta name="keywords" content="knowledge distillation, multimodal large language models, vision-language models, uncertainty, Bayesian inference, Gibbs prior, Beta-KD, CVPR 2026">
+  <meta name="author" content="Jingchen Sun, Shaobo Han, Deep Patel, Wataru Kohno, Can Jin, Changyou Chen">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Beta-KD">
+  <meta property="og:title" content="Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models">
+  <meta property="og:description" content="Beta-KD (CVPR 2026): adaptively balancing data and teacher supervision in multimodal LLM distillation via a teacher-informed Gibbs prior.">
+  <meta property="og:url" content="https://jingchensun.github.io/beta-kd/">
+  <meta property="og:image" content="https://jingchensun.github.io/beta-kd/static/images/teaser.png">
+  <meta property="og:image:alt" content="Overview of the Beta-KD framework">
+  <meta property="article:published_time" content="2026-03-22T00:00:00.000Z">
+  <meta property="article:author" content="Jingchen Sun">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="Knowledge Distillation">
+  <meta property="article:tag" content="Multimodal LLM">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models">
+  <meta name="twitter:description" content="Beta-KD (CVPR 2026): adaptively balancing data and teacher supervision in multimodal LLM distillation via a teacher-informed Gibbs prior.">
+  <meta name="twitter:image" content="https://jingchensun.github.io/beta-kd/static/images/teaser.png">
+  <meta name="twitter:image:alt" content="Overview of the Beta-KD framework">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models">
+  <meta name="citation_author" content="Sun, Jingchen">
+  <meta name="citation_author" content="Han, Shaobo">
+  <meta name="citation_author" content="Patel, Deep">
+  <meta name="citation_author" content="Kohno, Wataru">
+  <meta name="citation_author" content="Jin, Can">
+  <meta name="citation_author" content="Chen, Changyou">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)">
+  <meta name="citation_arxiv_id" content="2603.21426">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2603.21426">
+
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>Beta-KD: Uncertainty-Aware Knowledge Distillation for Multimodal LLMs | CVPR 2026</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e293b'/><text x='50' y='72' font-size='68' text-anchor='middle' fill='white' font-family='Georgia,serif'>β</text></svg>">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models",
+    "description": "Beta-KD casts teacher supervision as a Gibbs prior over student activations, yielding a closed-form, uncertainty-aware weighting that adaptively balances learning from data and from the teacher in multimodal LLM distillation.",
+    "author": [
+      {"@type": "Person", "name": "Jingchen Sun", "affiliation": [{"@type": "Organization", "name": "NEC Laboratories America"}, {"@type": "Organization", "name": "University at Buffalo, SUNY"}]},
+      {"@type": "Person", "name": "Shaobo Han", "affiliation": {"@type": "Organization", "name": "NEC Laboratories America"}},
+      {"@type": "Person", "name": "Deep Patel", "affiliation": {"@type": "Organization", "name": "NEC Laboratories America"}},
+      {"@type": "Person", "name": "Wataru Kohno", "affiliation": {"@type": "Organization", "name": "NEC Laboratories America"}},
+      {"@type": "Person", "name": "Can Jin", "affiliation": {"@type": "Organization", "name": "Rutgers University"}},
+      {"@type": "Person", "name": "Changyou Chen", "affiliation": {"@type": "Organization", "name": "University at Buffalo, SUNY"}}
+    ],
+    "datePublished": "2026-03-22",
+    "publisher": {"@type": "Organization", "name": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)"},
+    "url": "https://jingchensun.github.io/beta-kd/",
+    "image": "https://jingchensun.github.io/beta-kd/static/images/teaser.png",
+    "keywords": ["knowledge distillation", "multimodal large language models", "uncertainty", "Bayesian inference", "computer vision"],
+    "sameAs": ["https://arxiv.org/abs/2603.21426"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">
+              <span class="method-name">Beta-KD</span>: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Add author homepage links: <a href="URL" target="_blank">Name</a> -->
+              <span class="author-block">Jingchen Sun<sup>1,2,†</sup>,</span>
+              <span class="author-block">Shaobo Han<sup>1,‡</sup>,</span>
+              <span class="author-block">Deep Patel<sup>1</sup>,</span>
+              <span class="author-block">Wataru Kohno<sup>1</sup>,</span>
+              <span class="author-block">Can Jin<sup>3</sup>,</span>
+              <span class="author-block">Changyou Chen<sup>2</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>NEC Laboratories America, Inc.</span>
+              <span class="author-block"><sup>2</sup>University at Buffalo, SUNY</span>
+              <span class="author-block"><sup>3</sup>Rutgers University</span>
+            </div>
+
+            <div class="publication-venue">CVPR 2026</div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="eql-cntrb"><small><sup>†</sup>Work done during an internship at NEC Laboratories America &nbsp; <sup>‡</sup>Project Lead</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="static/pdfs/Beta-KD_CVPR2026.pdf" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2603.21426" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="https://github.com/Jingchensun/beta-kd" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="#BibTeX"
+                  class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-quote-left"></i>
+                    </span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Teaser image -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <figure class="paper-figure">
+          <img src="static/images/teaser.png" alt="Overview of the Beta-KD framework: (a) the learning balance between data and teacher; (b) Beta-KD predicts uncertainty weights beta_1 and beta_2 with an amortized optimization network.">
+        </figure>
+        <h2 class="subtitle has-text-centered figure-caption">
+          <strong>Overview of Beta-KD.</strong>
+          (a) Conventional KD struggles to balance learning from data (\(\mathcal{L}_{CE}\)) and learning from the teacher (\(\mathcal{L}_{KD}\)).
+          (b) Beta-KD treats teacher supervision as a Gibbs prior, which induces uncertainty weights \(\beta_1, \beta_2\) predicted by an amortized optimization network.
+          These weights adaptively modulate teacher&ndash;student alignment without manual hyperparameter tuning.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End teaser image -->
+
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Knowledge distillation establishes a learning paradigm that leverages both data supervision and teacher guidance.
+              However, determining the optimal balance between learning from data and learning from the teacher is challenging,
+              as some samples may be noisy while others are subject to teacher uncertainty.
+              This motivates the need for adaptively balancing data and teacher supervision.
+              We propose <strong>Beta</strong>-weighted <strong>K</strong>nowledge <strong>D</strong>istillation (<strong>Beta-KD</strong>),
+              an uncertainty-aware distillation framework that adaptively modulates how much the student relies on teacher guidance.
+              Specifically, we formulate teacher&ndash;student learning from a unified Bayesian perspective and interpret teacher supervision
+              as a Gibbs prior over student activations. This yields a closed-form, uncertainty-aware weighting mechanism and supports
+              arbitrary distillation objectives and their combinations. Extensive experiments on multimodal VQA benchmarks demonstrate that
+              distilling student Vision-Language Models from a large teacher VLM consistently improves performance.
+              The results show that Beta-KD outperforms existing knowledge distillation methods.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
+
+  <!-- Highlights -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Highlights</h2>
+          <div class="columns highlight-grid">
+            <div class="column is-one-third">
+              <div class="highlight-card">
+                <span class="highlight-icon"><i class="fas fa-project-diagram"></i></span>
+                <h3>Bayesian view of KD</h3>
+                <p>Teacher signals act as a <em>Gibbs prior</em> over student activations. KD training is MAP inference for those activations, done by amortized neural inference.</p>
+              </div>
+            </div>
+            <div class="column is-one-third">
+              <div class="highlight-card">
+                <span class="highlight-icon"><i class="fas fa-balance-scale"></i></span>
+                <h3>Closed-form weighting</h3>
+                <p>A Laplace approximation gives task- and instance-level uncertainty weights \(\beta\). No grid search over loss weights is needed.</p>
+              </div>
+            </div>
+            <div class="column is-one-third">
+              <div class="highlight-card">
+                <span class="highlight-icon"><i class="fas fa-chart-line"></i></span>
+                <h3>Consistent gains</h3>
+                <p>Up to <strong>+4.7</strong> on ScienceQA and <strong>+2.0</strong> average across six VQA benchmarks, at under 0.01% extra training time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End highlights -->
+
+
+  <!-- Method -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Method</h2>
+          <div class="content has-text-justified">
+            <p>
+              <strong>Teacher-informed Gibbs prior.</strong>
+              We treat the teacher&ndash;student discrepancy \(\ell(a^s; a^t)\) as an energy. Here \(a^s\) is a student activation
+              (features, logits or probabilities) and \(a^t\) is the matching teacher signal. Lower energy means higher probability,
+              and the concentration \(\beta\) sets how strongly the student is pulled toward the teacher:
+            </p>
+            $$p(a^s \mid a^t, \beta) = \frac{1}{Z_\beta(a^t)} \exp\!\big[-\beta\,\ell(a^s; a^t)\big], \qquad \beta > 0.$$
+            <p>
+              <strong>MAP of student activation.</strong>
+              We assume the teacher affects the output \(y\) only through the student, i.e. \(y \perp (a^t, \beta) \mid a^s\).
+              MAP inference then recovers the familiar CE + KD objective, plus a partition-function term:
+            </p>
+            $$\min_{a^s}\; \underbrace{-\log p(y \mid a^s)}_{\text{Cross-Entropy}} \;+\; \beta\,\underbrace{\ell(a^s; a^t)}_{\text{Distillation}} \;+\; \log Z_\beta(a^t).$$
+            <p>
+              <strong>Laplace approximation.</strong>
+              A second-order expansion around the energy minimizer makes \(Z_\beta\) tractable. It also adds a
+              \(-\tfrac{d}{2}\log\beta\) term that keeps \(\beta\) from diverging:
+            </p>
+            $$\min_{a^s}\; -\log p(y \mid a^s) \;+\; \beta\,\ell(a^s; a^t) \;-\; \frac{d}{2}\log\beta.$$
+            <p>
+              <strong>Amortized optimization on \(\beta\).</strong>
+              We learn \(\beta\) jointly with the student instead of solving for it per sample. With <em>task-level</em>
+              (homoscedastic) uncertainty, \(\beta_k\) is a learnable scalar for each loss. With <em>instance-level</em>
+              (heteroscedastic) uncertainty, a lightweight network predicts \(\beta(x) = g_\phi(h(x)) > 0\) from each input:
+            </p>
+            $$\min_{\theta,\phi}\; \mathcal{L}_{\mathrm{CE}}(\theta) \;+\; g_\phi(h(x))\,\ell(\theta) \;-\; \frac{d}{2}\log g_\phi(h(x)).$$
+          </div>
+
+          <figure class="paper-figure narrow">
+            <img src="static/images/energy.png" alt="Four representative distillation energies visualized in the probability simplex" loading="lazy">
+          </figure>
+          <p class="figure-caption">
+            <strong>Energy functions.</strong> Four representative distillation losses visualized in the probability simplex.
+            Beta-KD works with any of them, from KL variants (FKL, RKL) to MSE and Cosine distance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End method -->
+
+
+  <!-- Main results -->
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered">Experimental Results</h2>
+      <p class="section-intro">
+        The teacher is MobileVLM V2 7B and the student is MobileVLM V2 1.7B. Only the language backbone is fine-tuned.
+        For the six-benchmark results, the transfer set is scaled to 2.2M image&ndash;text pairs.
+      </p>
+
+      <h3 class="title is-5 table-title">Results on six multimodal benchmarks</h3>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th class="has-text-left">Method</th><th>LLM</th><th>#Samples</th>
+              <th>MME<sup>P</sup></th><th>MME<sup>A</sup></th><th>GQA</th><th>VQA<sup>T</sup></th>
+              <th>POPE</th><th>MMB<sup>dev</sup></th><th>SQA<sup>I</sup></th><th>Avg.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="has-text-left">LLaVA-1.5</td><td>Vicuna-7B</td><td>1.2M</td><td>1510.7</td><td>75.5</td><td>62.0</td><td>58.2</td><td>85.9</td><td>64.3</td><td>66.8</td><td>68.8</td></tr>
+            <tr><td class="has-text-left">ShareGPT4V</td><td>Vicuna-7B</td><td>1.9M</td><td>1567.4</td><td>78.4</td><td>63.3</td><td>60.4</td><td>85.7</td><td>68.8</td><td>68.4</td><td>70.8</td></tr>
+            <tr class="group-end"><td class="has-text-left">MobileVLM V2 7B</td><td>Vicuna-7B</td><td>3.6M</td><td>1559.0</td><td>78.0</td><td>62.6</td><td>62.3</td><td>86.6</td><td>69.2</td><td>74.7</td><td>72.2</td></tr>
+            <tr><td class="has-text-left">MoE-LLaVA-2B</td><td>Qwen-1.5-1.8B</td><td>2.2M</td><td>1292.0</td><td>64.6</td><td>61.5</td><td>48.0</td><td>87.0</td><td>59.7</td><td>63.1</td><td>64.0</td></tr>
+            <tr><td class="has-text-left">MoE-LLaVA-1.6B</td><td>StableLM-1.6B</td><td>2.2M</td><td>1300.0</td><td>65.0</td><td>60.4</td><td>47.8</td><td>84.3</td><td>59.4</td><td>62.6</td><td>63.3</td></tr>
+            <tr class="group-end"><td class="has-text-left">MobileVLM 3B</td><td>MobileLLaMA 2.7B</td><td>3.6M</td><td>1288.9</td><td>64.4</td><td>59.0</td><td>47.5</td><td>84.9</td><td>59.6</td><td>61.2</td><td>62.8</td></tr>
+            <tr class="row-base"><td class="has-text-left">MobileVLM 1.7B</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1196.2</td><td>59.8</td><td>56.1</td><td>41.5</td><td>84.5</td><td>53.2</td><td>57.3</td><td>58.7</td></tr>
+            <tr class="row-base"><td class="has-text-left">MobileVLM V2 1.7B</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1246.3</td><td>62.3</td><td>55.1</td><td>51.2</td><td>85.3</td><td>57.6</td><td>63.2</td><td>62.5</td></tr>
+            <tr class="row-base group-end"><td class="has-text-left">LLAVADI</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1178.6</td><td>58.9</td><td>55.4</td><td>45.3</td><td>84.7</td><td>55.0</td><td>56.0</td><td>59.2</td></tr>
+            <tr class="row-base"><td class="has-text-left">Align-KD</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1288.9</td><td>64.4</td><td>60.0</td><td>52.8</td><td>85.4</td><td>57.0</td><td>61.0</td><td>63.4</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1315.1 <span class="gain">+26.3</span></td><td>65.8 <span class="gain">+1.3</span></td><td>60.2 <span class="gain">+0.2</span></td><td>52.9 <span class="gain">+0.1</span></td><td>85.4 <span class="flat">+0.0</span></td><td>58.8 <span class="gain">+1.8</span></td><td>61.4 <span class="gain">+0.4</span></td><td>64.1 <span class="gain">+0.6</span></td></tr>
+            <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1343.0 <span class="gain">+54.1</span></td><td>67.1 <span class="gain">+2.7</span></td><td>60.8 <span class="gain">+0.8</span></td><td>53.9 <span class="gain">+1.1</span></td><td>85.4 <span class="flat">+0.0</span></td><td>59.1 <span class="gain">+2.2</span></td><td>61.2 <span class="gain">+0.2</span></td><td>64.6 <span class="gain">+1.2</span></td></tr>
+            <tr class="row-base"><td class="has-text-left">Cosine KD</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1308.4</td><td>65.4</td><td>59.9</td><td>52.2</td><td>84.6</td><td>57.1</td><td>61.3</td><td>63.4</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td>1352.0 <span class="gain">+43.6</span></td><td>67.6 <span class="gain">+2.2</span></td><td>60.8 <span class="gain">+0.9</span></td><td>53.9 <span class="gain">+1.7</span></td><td>85.4 <span class="gain">+0.8</span></td><td>59.1 <span class="gain">+2.0</span></td><td>61.2 <span class="drop">&minus;0.1</span></td><td>64.7 <span class="gain">+1.2</span></td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>MobileLLaMA 1.4B</td><td>3.6M</td><td><b>1350.3</b> <span class="gain">+42.0</span></td><td><b>67.5</b> <span class="gain">+2.1</span></td><td><b>61.2</b> <span class="gain">+1.3</span></td><td><b>54.2</b> <span class="gain">+1.9</span></td><td><b>86.6</b> <span class="gain">+1.9</span></td><td><b>60.2</b> <span class="gain">+3.1</span></td><td><b>63.1</b> <span class="gain">+1.8</span></td><td><b>65.5</b> <span class="gain">+2.0</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        MME<sup>A</sup> is MME<sup>P</sup> divided by 20 to match the scale of the other benchmarks. Avg. is computed over the six datasets.
+        Align-KD is our reproduction. <em>Cosine KD</em> replaces the FKL loss in Align-KD with our probability-space Cosine distance.
+        Beta-KD improves both variants and sets a new state of the art. The 1.7B student even beats larger models such as MobileVLM 3B and MoE-LLaVA-2B.
+      </p>
+
+      <h3 class="title is-5 table-title">Two-loss balancing on ScienceQA (CE + KD)</h3>
+      <div class="table-wrap">
+        <table class="results-table compact">
+          <thead>
+            <tr>
+              <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+              <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+              <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="has-text-left">CE + FKL</td><td>48.2</td><td>54.7</td><td class="has-text-left">CE + JS</td><td>48.5</td><td>54.8</td><td class="has-text-left">CE + CTKD</td><td>48.6</td><td>55.0</td></tr>
+            <tr><td class="has-text-left">w/ Manual</td><td>48.6</td><td>54.9</td><td class="has-text-left">w/ Manual</td><td>49.4</td><td>56.3</td><td class="has-text-left">w/ Manual</td><td>49.1</td><td>55.1</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>49.3 <span class="gain">+0.7</span></td><td>55.3 <span class="gain">+0.4</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>50.5 <span class="gain">+1.1</span></td><td>58.1 <span class="gain">+1.7</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>49.9 <span class="gain">+0.8</span></td><td>55.3 <span class="gain">+0.3</span></td></tr>
+            <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>51.8 <span class="gain">+3.2</span></td><td>61.1 <span class="gain">+6.2</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>53.3 <span class="gain">+3.9</span></td><td>66.9 <span class="gain">+10.6</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>53.8 <span class="gain">+4.6</span></td><td>65.1 <span class="gain">+10.0</span></td></tr>
+            <tr><td class="has-text-left">CE + RKL</td><td>46.2</td><td>50.7</td><td class="has-text-left">CE + TVD</td><td>49.1</td><td>53.1</td><td class="has-text-left">CE + MSE-Probs</td><td>47.1</td><td>52.1</td></tr>
+            <tr><td class="has-text-left">w/ Manual</td><td>47.8</td><td>53.5</td><td class="has-text-left">w/ Manual</td><td>50.1</td><td>56.9</td><td class="has-text-left">w/ Manual</td><td>49.3</td><td>56.1</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>49.5 <span class="gain">+1.8</span></td><td>56.4 <span class="gain">+3.0</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>51.3 <span class="gain">+1.2</span></td><td>61.0 <span class="gain">+4.1</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>51.7 <span class="gain">+2.4</span></td><td>60.3 <span class="gain">+4.2</span></td></tr>
+            <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>52.4 <span class="gain">+4.6</span></td><td>61.6 <span class="gain">+8.1</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>52.0 <span class="gain">+1.9</span></td><td>60.0 <span class="gain">+3.1</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>52.2 <span class="gain">+2.9</span></td><td>62.4 <span class="gain">+6.3</span></td></tr>
+            <tr><td class="has-text-left">CE + SFKL</td><td>49.4</td><td>57.7</td><td class="has-text-left">CE + AdaptiveKL</td><td>49.2</td><td>55.2</td><td class="has-text-left">CE + Cosine-Logits</td><td>48.4</td><td>55.6</td></tr>
+            <tr><td class="has-text-left">w/ Manual</td><td>51.1</td><td>60.4</td><td class="has-text-left">w/ Manual</td><td>49.6</td><td>56.0</td><td class="has-text-left">w/ Manual</td><td>50.7</td><td>59.3</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>53.1 <span class="gain">+1.9</span></td><td>63.2 <span class="gain">+2.9</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>50.2 <span class="gain">+0.6</span></td><td>57.0 <span class="gain">+1.0</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>53.1 <span class="gain">+2.4</span></td><td>63.3 <span class="gain">+3.9</span></td></tr>
+            <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>51.0 <span class="drop">&minus;0.1</span></td><td>60.0 <span class="drop">&minus;0.3</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>54.2 <span class="gain">+4.6</span></td><td>65.5 <span class="gain">+9.5</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>53.7 <span class="gain">+3.0</span></td><td>64.9 <span class="gain">+5.6</span></td></tr>
+            <tr><td class="has-text-left">CE + SRKL</td><td>48.6</td><td>55.2</td><td class="has-text-left">CE + TAID</td><td>46.2</td><td>49.3</td><td class="has-text-left">CE + Cosine-Probs</td><td>51.6</td><td>59.1</td></tr>
+            <tr><td class="has-text-left">w/ Manual</td><td>50.2</td><td>57.8</td><td class="has-text-left">w/ Manual</td><td>50.1</td><td>56.7</td><td class="has-text-left">w/ Manual</td><td>52.8</td><td>62.1</td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>52.0 <span class="gain">+1.8</span></td><td>60.7 <span class="gain">+2.8</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>54.1 <span class="gain">+4.0</span></td><td>64.4 <span class="gain">+7.7</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>54.2 <span class="gain">+1.4</span></td><td>65.3 <span class="gain">+3.2</span></td></tr>
+            <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>54.3 <span class="gain">+4.1</span></td><td>67.3 <span class="gain">+9.5</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>54.8 <span class="gain">+4.7</span></td><td>65.9 <span class="gain">+9.2</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>54.9</b> <span class="gain">+2.1</span></td><td><b>67.5</b> <span class="gain">+5.5</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        <em>Manual</em> uses fixed weights set from the initial loss scales. <em>Beta-KD (Task)</em> learns one uncertainty weight per loss, shared across samples.
+        <em>Beta-KD (Instance)</em> predicts a weight for each input. VQA-Acc covers all questions, and IMG-Acc covers only questions with image inputs.
+        Gains are measured against <em>Manual</em>.
+      </p>
+
+      <details class="more-results">
+        <summary>Show three-loss balancing on ScienceQA (CE + KD + FD)</summary>
+        <div class="table-wrap">
+          <table class="results-table compact">
+            <thead>
+              <tr>
+                <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+                <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+                <th class="has-text-left">Method</th><th>VQA-Acc</th><th>IMG-Acc</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="has-text-left">CE + FKL + FD</td><td>45.5</td><td>47.9</td><td class="has-text-left">CE + JS + FD</td><td>48.4</td><td>53.2</td><td class="has-text-left">CE + MSE-Logits + FD</td><td>46.4</td><td>51.1</td></tr>
+              <tr><td class="has-text-left">w/ Manual</td><td>47.7</td><td>53.3</td><td class="has-text-left">w/ Manual</td><td>48.9</td><td>53.7</td><td class="has-text-left">w/ Manual</td><td>47.4</td><td>52.6</td></tr>
+              <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>50.2 <span class="gain">+2.5</span></td><td>59.1 <span class="gain">+5.8</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>49.7 <span class="gain">+0.8</span></td><td>54.6 <span class="gain">+0.9</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>48.6 <span class="gain">+1.2</span></td><td>54.5 <span class="gain">+1.9</span></td></tr>
+              <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>52.9</b> <span class="gain">+5.2</span></td><td><b>61.9</b> <span class="gain">+8.6</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>52.7 <span class="gain">+3.8</span></td><td>62.3 <span class="gain">+8.6</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>51.3 <span class="gain">+3.9</span></td><td>60.9 <span class="gain">+8.3</span></td></tr>
+              <tr><td class="has-text-left">CE + RKL + FD</td><td>50.3</td><td>56.5</td><td class="has-text-left">CE + TVD + FD</td><td>49.7</td><td>55.1</td><td class="has-text-left">CE + MSE-Probs + FD</td><td>48.2</td><td>54.0</td></tr>
+              <tr><td class="has-text-left">w/ Manual</td><td>49.8</td><td>56.0</td><td class="has-text-left">w/ Manual</td><td>51.8</td><td>59.7</td><td class="has-text-left">w/ Manual</td><td>48.1</td><td>54.5</td></tr>
+              <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>49.5 <span class="drop">&minus;0.3</span></td><td>55.8 <span class="drop">&minus;0.2</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>54.1 <span class="gain">+2.4</span></td><td>64.7 <span class="gain">+4.9</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>48.2 <span class="gain">+0.1</span></td><td>55.3 <span class="gain">+0.8</span></td></tr>
+              <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>50.1 <span class="gain">+0.3</span></td><td>57.5 <span class="gain">+1.5</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>49.0 <span class="drop">&minus;2.8</span></td><td>56.8 <span class="drop">&minus;2.9</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>47.1 <span class="drop">&minus;1.0</span></td><td>53.1 <span class="drop">&minus;1.4</span></td></tr>
+              <tr><td class="has-text-left">CE + SFKL + FD</td><td>51.5</td><td>59.0</td><td class="has-text-left">CE + AdaptiveKL + FD</td><td>47.4</td><td>51.5</td><td class="has-text-left">CE + Cosine-Logits + FD</td><td>44.9</td><td>48.4</td></tr>
+              <tr><td class="has-text-left">w/ Manual</td><td>51.3</td><td>59.1</td><td class="has-text-left">w/ Manual</td><td>49.7</td><td>56.6</td><td class="has-text-left">w/ Manual</td><td>48.1</td><td>55.0</td></tr>
+              <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>51.4 <span class="gain">+0.1</span></td><td>59.6 <span class="gain">+0.5</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>52.3 <span class="gain">+2.6</span></td><td>62.1 <span class="gain">+5.4</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>51.5 <span class="gain">+3.4</span></td><td>62.0 <span class="gain">+6.9</span></td></tr>
+              <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>50.0 <span class="drop">&minus;1.3</span></td><td>59.1 <span class="drop">&minus;0.1</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>49.5 <span class="drop">&minus;0.2</span></td><td>56.4 <span class="drop">&minus;0.2</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>51.4 <span class="gain">+3.3</span></td><td>60.1 <span class="gain">+5.1</span></td></tr>
+              <tr><td class="has-text-left">CE + SRKL + FD</td><td>48.3</td><td>52.4</td><td class="has-text-left">CE + TAID + FD</td><td>48.3</td><td>54.4</td><td class="has-text-left">CE + Cosine + FD</td><td>47.7</td><td>52.3</td></tr>
+              <tr><td class="has-text-left">w/ Manual</td><td>49.4</td><td>55.1</td><td class="has-text-left">w/ Manual</td><td>49.0</td><td>55.9</td><td class="has-text-left">w/ Manual</td><td>49.4</td><td>56.9</td></tr>
+              <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>50.9 <span class="gain">+1.5</span></td><td>58.2 <span class="gain">+3.1</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>50.0 <span class="gain">+1.0</span></td><td>57.7 <span class="gain">+1.8</span></td><td class="has-text-left">w/ Beta-KD (Task)</td><td>51.3 <span class="gain">+1.9</span></td><td>61.8 <span class="gain">+4.9</span></td></tr>
+              <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>53.9 <span class="gain">+4.5</span></td><td>63.3 <span class="gain">+8.1</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td>53.2 <span class="gain">+4.2</span></td><td>64.8 <span class="gain">+8.9</span></td><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>54.2</b> <span class="gain">+4.8</span></td><td><b>64.8</b> <span class="gain">+7.9</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption">
+          Each baseline combines cross-entropy, a KL-based distillation loss and a feature-level distillation (FD) objective. Gains are measured against <em>Manual</em>.
+        </p>
+      </details>
+
+      <div class="columns side-tables">
+        <div class="column">
+          <h3 class="title is-5 table-title">Design space of energy functions (ScienceQA)</h3>
+          <div class="table-wrap">
+            <table class="results-table compact">
+              <thead>
+                <tr><th class="has-text-left">Method</th><th>Acc</th><th class="has-text-left">Method</th><th>Acc</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="has-text-left">Cross Entropy</td><td>48.4 &plusmn; 1.4</td><td class="has-text-left">Adaptive KL</td><td>44.1 &plusmn; 2.4</td></tr>
+                <tr><td class="has-text-left">FKL</td><td>45.7 &plusmn; 1.6</td><td class="has-text-left">CTKD</td><td>37.8 &plusmn; 2.8</td></tr>
+                <tr><td class="has-text-left">RKL</td><td>42.8 &plusmn; 3.2</td><td class="has-text-left">TAID</td><td>47.0 &plusmn; 0.9</td></tr>
+                <tr><td class="has-text-left">Skew FKL</td><td>45.7 &plusmn; 3.4</td><td class="has-text-left">MSE-Logits</td><td>4.9 &plusmn; 10.5</td></tr>
+                <tr><td class="has-text-left">Skew RKL</td><td>45.7 &plusmn; 2.7</td><td class="has-text-left">MSE-Probs</td><td>28.2 &plusmn; 10.6</td></tr>
+                <tr><td class="has-text-left">JS</td><td>45.8 &plusmn; 3.6</td><td class="has-text-left">Cosine-Logits</td><td>4.0 &plusmn; 1.0</td></tr>
+                <tr><td class="has-text-left">TVD</td><td>38.7 &plusmn; 2.6</td><td class="has-text-left"><b>Cosine-Probs</b></td><td><b>47.2 &plusmn; 0.9</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption">
+            Mean &plusmn; std over three runs. Logit-level matching works poorly on generative MLLMs.
+            Scale-invariant <em>Cosine-Probs</em> is the best distillation energy.
+          </p>
+        </div>
+        <div class="column">
+          <h3 class="title is-5 table-title">Generalization to LLaVA-Qwen</h3>
+          <div class="table-wrap">
+            <table class="results-table compact">
+              <thead>
+                <tr><th class="has-text-left">Student</th><th class="has-text-left">Method</th><th>TextVQA</th><th>ScienceQA</th></tr>
+              </thead>
+              <tbody>
+                <tr class="row-base"><td class="has-text-left" rowspan="3">Qwen2.5-0.5B</td><td class="has-text-left">LLaVA-KD</td><td>52.0</td><td>60.6</td></tr>
+                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>53.1 <span class="gain">+1.1</span></td><td>61.9 <span class="gain">+1.3</span></td></tr>
+                <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>54.9</b> <span class="gain">+2.9</span></td><td><b>64.4</b> <span class="gain">+3.8</span></td></tr>
+                <tr class="row-base"><td class="has-text-left" rowspan="3">Qwen2.5-1.5B</td><td class="has-text-left">LLaVA-KD</td><td>59.7</td><td>71.4</td></tr>
+                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>61.0 <span class="gain">+1.3</span></td><td>71.9 <span class="gain">+0.5</span></td></tr>
+                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>62.7</b> <span class="gain">+3.0</span></td><td><b>73.5</b> <span class="gain">+1.9</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption">
+            The teacher is Qwen2.5-3B. Beta-KD carries over to LLaVA-style architectures at both student sizes.
+          </p>
+
+          <h3 class="title is-5 table-title">Training efficiency</h3>
+          <div class="table-wrap">
+            <table class="results-table compact">
+              <thead>
+                <tr><th class="has-text-left">Strategy</th><th>it/s</th><th>Time/Epoch</th><th>GPU Mem.</th><th>Params</th></tr>
+              </thead>
+              <tbody>
+                <tr class="row-base"><td class="has-text-left">Align-KD</td><td>1.82</td><td>11:35</td><td>47.5 GB</td><td>0</td></tr>
+                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>1.87</td><td>11:30</td><td>47.5 GB</td><td>3</td></tr>
+                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>1.85</td><td>11:35</td><td>47.6 GB</td><td>524K</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption">
+            The instance-level weighting network adds only 0.03% of the parameters of the 1.67B backbone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End main results -->
+
+
+  <!-- Analysis -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">How Uncertainty Weighting Works</h2>
+      <div class="columns is-centered">
+        <div class="column">
+          <figure class="paper-figure">
+            <img src="static/images/dynamics.png" alt="Training loss curves and evolution of the uncertainty weights beta for FKL+CE and RKL+CE" loading="lazy">
+          </figure>
+          <p class="figure-caption">
+            <strong>Faster, more stable optimization.</strong> Total training loss (top) and how the task- and instance-level weights
+            \(\beta\) evolve (bottom) for FKL + CE and RKL + CE. Adapting \(\beta\) during training speeds up convergence and stabilizes optimization.
+          </p>
+        </div>
+        <div class="column">
+          <figure class="paper-figure">
+            <img src="static/images/logits.png" alt="Teacher and student logit distributions at training step 10 and step 190" loading="lazy">
+          </figure>
+          <p class="figure-caption">
+            <strong>Closer teacher&ndash;student alignment.</strong> Teacher and student logit distributions early (Step 10) and late (Step 190) in training.
+            Both Beta-KD variants shrink the logit matching distance compared with the baseline, and the instance-level variant aligns most closely.
+          </p>
+        </div>
+      </div>
+      <div class="columns is-centered is-vcentered entropy-row">
+        <div class="column is-5">
+          <figure class="paper-figure">
+            <img src="static/images/entropy.png" alt="Student entropy and the instance-level distillation weight over training" loading="lazy">
+          </figure>
+        </div>
+        <div class="column is-6">
+          <div class="content analysis-text">
+            <p>
+              <strong>Instance-level adaptivity.</strong> Early in training, student entropy is high and the student is uncertain.
+              Beta-KD assigns the distillation loss a large weight (e.g. 1.98), so the student follows the teacher closely.
+              As entropy falls and the student grows more confident, the weight drops (e.g. 0.3) and the student relies more on its own predictions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End analysis -->
+  </main>
+
+
+  <!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@inproceedings{sun2026uncertainty,
+  title={Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models},
+  author={Sun, Jingchen and Han, Shaobo and Patel, Deep and Kohno, Wataru and Jin, Can and Chen, Changyou},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+  <!--End BibTex citation -->
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+              Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
