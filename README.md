@@ -7,12 +7,13 @@ Models </h1>
 <sup>1</sup> University at Buffalo, SUNY &nbsp;&nbsp; <sup>2</sup> NEC Laboratories America, Inc., USA &nbsp;&nbsp; <sup>3</sup> Rutgers University
 
 
+[![Project Page](https://img.shields.io/badge/Project-Page-2563eb?logo=googlechrome&logoColor=white)](https://jingchensun.github.io/beta-kd/)
 [![GitHub Project](https://img.shields.io/badge/GitHub-Project-blue?logo=github)](https://github.com/Jingchensun/beta-kd)
 [![arXiv](https://img.shields.io/badge/arXiv-2603.21426-b31b1b.svg)](https://arxiv.org/abs/2603.21426) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
 
 ## Introduction
-We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://arxiv.org/abs/2603.21426)]
+We propose a novel uncertainty-aware knowledge distillation method, which can improve the performance of the student model by leveraging the uncertainty of the teacher model. [[Paper](https://arxiv.org/abs/2603.21426)] [[Project Page](https://jingchensun.github.io/beta-kd/)]
 <div align="center">
 <img src="assets/main.png" width="70%">
 </div>
