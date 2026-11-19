@@ -135,13 +135,12 @@
               <span class="method-name">Beta-KD</span>: Uncertainty-Aware Knowledge Distillation for Multimodal Large Language Models
             </h1>
             <div class="is-size-5 publication-authors">
-              <!-- Add author homepage links: <a href="URL" target="_blank">Name</a> -->
-              <span class="author-block">Jingchen Sun<sup>1,2,†</sup>,</span>
-              <span class="author-block">Shaobo Han<sup>1,‡</sup>,</span>
-              <span class="author-block">Deep Patel<sup>1</sup>,</span>
+              <span class="author-block"><a href="https://jingchensun.github.io/" target="_blank">Jingchen Sun</a><sup>1,2,†</sup>,</span>
+              <span class="author-block"><a href="https://shaobohan.net/" target="_blank">Shaobo Han</a><sup>1,‡</sup>,</span>
+              <span class="author-block"><a href="https://deepsworld.github.io/" target="_blank">Deep Patel</a><sup>1</sup>,</span>
               <span class="author-block">Wataru Kohno<sup>1</sup>,</span>
-              <span class="author-block">Can Jin<sup>3</sup>,</span>
-              <span class="author-block">Changyou Chen<sup>2</sup></span>
+              <span class="author-block"><a href="https://jincan333.github.io/" target="_blank">Can Jin</a><sup>3</sup>,</span>
+              <span class="author-block"><a href="https://cse.buffalo.edu/~changyou/index.html" target="_blank">Changyou Chen</a><sup>2</sup></span>
             </div>
 
             <div class="is-size-5 publication-authors">
@@ -453,70 +452,6 @@
           Each baseline combines cross-entropy, a KL-based distillation loss and a feature-level distillation (FD) objective. Gains are measured against <em>Manual</em>.
         </p>
       </details>
-
-      <div class="columns side-tables">
-        <div class="column">
-          <h3 class="title is-5 table-title">Design space of energy functions (ScienceQA)</h3>
-          <div class="table-wrap">
-            <table class="results-table compact">
-              <thead>
-                <tr><th class="has-text-left">Method</th><th>Acc</th><th class="has-text-left">Method</th><th>Acc</th></tr>
-              </thead>
-              <tbody>
-                <tr><td class="has-text-left">Cross Entropy</td><td>48.4 &plusmn; 1.4</td><td class="has-text-left">Adaptive KL</td><td>44.1 &plusmn; 2.4</td></tr>
-                <tr><td class="has-text-left">FKL</td><td>45.7 &plusmn; 1.6</td><td class="has-text-left">CTKD</td><td>37.8 &plusmn; 2.8</td></tr>
-                <tr><td class="has-text-left">RKL</td><td>42.8 &plusmn; 3.2</td><td class="has-text-left">TAID</td><td>47.0 &plusmn; 0.9</td></tr>
-                <tr><td class="has-text-left">Skew FKL</td><td>45.7 &plusmn; 3.4</td><td class="has-text-left">MSE-Logits</td><td>4.9 &plusmn; 10.5</td></tr>
-                <tr><td class="has-text-left">Skew RKL</td><td>45.7 &plusmn; 2.7</td><td class="has-text-left">MSE-Probs</td><td>28.2 &plusmn; 10.6</td></tr>
-                <tr><td class="has-text-left">JS</td><td>45.8 &plusmn; 3.6</td><td class="has-text-left">Cosine-Logits</td><td>4.0 &plusmn; 1.0</td></tr>
-                <tr><td class="has-text-left">TVD</td><td>38.7 &plusmn; 2.6</td><td class="has-text-left"><b>Cosine-Probs</b></td><td><b>47.2 &plusmn; 0.9</b></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="table-caption">
-            Mean &plusmn; std over three runs. Logit-level matching works poorly on generative MLLMs.
-            Scale-invariant <em>Cosine-Probs</em> is the best distillation energy.
-          </p>
-        </div>
-        <div class="column">
-          <h3 class="title is-5 table-title">Generalization to LLaVA-Qwen</h3>
-          <div class="table-wrap">
-            <table class="results-table compact">
-              <thead>
-                <tr><th class="has-text-left">Student</th><th class="has-text-left">Method</th><th>TextVQA</th><th>ScienceQA</th></tr>
-              </thead>
-              <tbody>
-                <tr class="row-base"><td class="has-text-left" rowspan="3">Qwen2.5-0.5B</td><td class="has-text-left">LLaVA-KD</td><td>52.0</td><td>60.6</td></tr>
-                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>53.1 <span class="gain">+1.1</span></td><td>61.9 <span class="gain">+1.3</span></td></tr>
-                <tr class="row-ours group-end"><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>54.9</b> <span class="gain">+2.9</span></td><td><b>64.4</b> <span class="gain">+3.8</span></td></tr>
-                <tr class="row-base"><td class="has-text-left" rowspan="3">Qwen2.5-1.5B</td><td class="has-text-left">LLaVA-KD</td><td>59.7</td><td>71.4</td></tr>
-                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>61.0 <span class="gain">+1.3</span></td><td>71.9 <span class="gain">+0.5</span></td></tr>
-                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td><b>62.7</b> <span class="gain">+3.0</span></td><td><b>73.5</b> <span class="gain">+1.9</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="table-caption">
-            The teacher is Qwen2.5-3B. Beta-KD carries over to LLaVA-style architectures at both student sizes.
-          </p>
-
-          <h3 class="title is-5 table-title">Training efficiency</h3>
-          <div class="table-wrap">
-            <table class="results-table compact">
-              <thead>
-                <tr><th class="has-text-left">Strategy</th><th>it/s</th><th>Time/Epoch</th><th>GPU Mem.</th><th>Params</th></tr>
-              </thead>
-              <tbody>
-                <tr class="row-base"><td class="has-text-left">Align-KD</td><td>1.82</td><td>11:35</td><td>47.5 GB</td><td>0</td></tr>
-                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Task)</td><td>1.87</td><td>11:30</td><td>47.5 GB</td><td>3</td></tr>
-                <tr class="row-ours"><td class="has-text-left">w/ Beta-KD (Instance)</td><td>1.85</td><td>11:35</td><td>47.6 GB</td><td>524K</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="table-caption">
-            The instance-level weighting network adds only 0.03% of the parameters of the 1.67B backbone.
-          </p>
-        </div>
-      </div>
     </div>
   </section>
   <!-- End main results -->
